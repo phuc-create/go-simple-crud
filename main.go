@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
-	"github.com/phuc-create/go-simple-crud/apis"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 const (
@@ -17,10 +15,10 @@ const (
 )
 
 func main() {
-	router := mux.NewRouter()
-	router.HandleFunc("/api/user/find", apis.FindUser).Methods(GET)
-	router.HandleFunc("/api/user/users", apis.GetUsers).Methods(GET)
-
-	fmt.Printf("Start server at port http://localhost:5050\n")
-	log.Fatal(http.ListenAndServe(":5050", router))
+	router := chi.NewRouter()
+	router.Use(middleware.Logger)
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello world!"))
+	})
+	http.ListenAndServe(":3000", router)
 }
