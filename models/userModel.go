@@ -3,7 +3,8 @@ package models
 import (
 	"errors"
 	"fmt"
-	"main/go-projects/go-simple-crud/entities"
+
+	"github.com/phuc-create/go-simple-crud/entities"
 )
 
 var listUser = make([]*entities.User, 0)

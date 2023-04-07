@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
-	"main/go-projects/go-simple-crud/apis"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/phuc-create/go-simple-crud/apis"
 )
 
 const (

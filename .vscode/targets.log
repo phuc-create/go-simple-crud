@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Fri Apr  7 15:14:51 2023
+# Make data base, printed on Fri Apr  7 16:15:25 2023
 
 # Variables
 
@@ -38,7 +38,6 @@ _ = /usr/bin/make
 MAKEFILE_LIST :=  Makefile
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
- 
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
@@ -162,9 +161,9 @@ VSCODE_PID = 414
 
 # Directories
 
-# . (device 16777232, inode 31783041): 9 files, no impossibilities.
+# . (device 16777232, inode 31783041): 17 files, no impossibilities.
 
-# 9 files, no impossibilities in 1 directories.
+# 17 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -194,6 +193,7 @@ Makefile:
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
+ 
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 build:
@@ -213,7 +213,6 @@ build:
 run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 2):
 	go run main.go
@@ -232,6 +231,6 @@ run:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Fri Apr  7 15:14:51 2023
+# Finished Make data base on Fri Apr  7 16:15:25 2023
 
  

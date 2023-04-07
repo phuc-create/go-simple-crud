@@ -1,9 +1,10 @@
 package apis
 
 import (
-	"main/go-projects/go-simple-crud/helpers"
-	"main/go-projects/go-simple-crud/models"
 	"net/http"
+
+	"github.com/phuc-create/go-simple-crud/helpers"
+	"github.com/phuc-create/go-simple-crud/models"
 )
 
 func FindUser(w http.ResponseWriter, r *http.Request) {
