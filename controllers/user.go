@@ -17,15 +17,20 @@ func GetAllUser() []*models.User {
 
 }
 
-func CreateUser(user *models.User) bool {
-	if user.ID != "" && user.Username != "" && user.Password != "" {
-		if userFind, _ := FindUser(user.ID); userFind == nil {
-			users = append(users, user)
-			return true
-		}
+func CreateUser(user *models.User) (models.User, error) {
+	if user.ID == "" || user.Username == "" || user.Password == "" {
+		return models.User{}, errors.New("missing information. please check again")
 	}
 
-	return false
+	if userFind, _ := FindUser(user.ID); userFind == nil {
+		users = append(users, user)
+		return models.User{
+			ID:       user.ID,
+			Username: user.Username,
+			Password: user.Password,
+		}, nil
+	}
+	return models.User{}, errors.New("something went wrong")
 }
 
 func UpdateUser(newUser *models.User) bool {
