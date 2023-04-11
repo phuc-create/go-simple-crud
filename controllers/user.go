@@ -12,7 +12,7 @@ func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 
 }
 
-func GetAllUsers() []*models.User {
+func GetAllUser() []*models.User {
 	return users
 
 }

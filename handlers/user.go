@@ -22,7 +22,7 @@ func FindUser(w http.ResponseWriter, r *http.Request) {
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	list := controllers.GetAllUsers()
+	list := controllers.GetAllUser()
 	if len(list) < 1 {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, "Could not find any user!")
 	}

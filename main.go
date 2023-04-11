@@ -33,5 +33,5 @@ func main() {
 		log.Fatalf("error initializing router: %v", err)
 	}
 
-	http.ListenAndServe(":3000", router)
+	log.Fatal(http.ListenAndServe(":3000", router))
 }
