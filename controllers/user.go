@@ -2,22 +2,22 @@ package controllers
 
 import (
 	"errors"
-	"github.com/phuc-create/go-simple-crud/entities"
+	"github.com/phuc-create/go-simple-crud/models"
 )
 
-var users = make([]*entities.User, 0)
+var users = make([]*models.User, 0)
 
-func removeSpecificElInArr(arr []*entities.User, index int) []*entities.User {
+func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 	return append(arr[:index], arr[index+1:]...)
 
 }
 
-func GetAllUsers() []*entities.User {
+func GetAllUsers() []*models.User {
 	return users
 
 }
 
-func CreateUser(user *entities.User) bool {
+func CreateUser(user *models.User) bool {
 	if user.ID != "" && user.Username != "" && user.Password != "" {
 		if userFind, _ := FindUser(user.ID); userFind == nil {
 			users = append(users, user)
@@ -28,7 +28,7 @@ func CreateUser(user *entities.User) bool {
 	return false
 }
 
-func UpdateUser(newUser *entities.User) bool {
+func UpdateUser(newUser *models.User) bool {
 	for index, user := range users {
 		if user.ID == newUser.ID {
 			users[index] = newUser
@@ -48,7 +48,7 @@ func DeleteUser(id string) bool {
 	return false
 }
 
-func FindUser(id string) (*entities.User, error) {
+func FindUser(id string) (*models.User, error) {
 	for _, user := range users {
 		if user.ID == id {
 			return user, nil

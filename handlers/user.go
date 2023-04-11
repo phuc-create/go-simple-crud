@@ -1,10 +1,10 @@
 package handlers
 
 import (
+	"github.com/phuc-create/go-simple-crud/controllers"
 	"net/http"
 
 	"github.com/phuc-create/go-simple-crud/helpers"
-	"github.com/phuc-create/go-simple-crud/models"
 )
 
 func FindUser(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +13,7 @@ func FindUser(w http.ResponseWriter, r *http.Request) {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, "User Not Found!Pls check again.")
 		return
 	}
-	user, err := models.FindUser(ids[0])
+	user, err := controllers.FindUser(ids[0])
 	if err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 	}
@@ -22,7 +22,7 @@ func FindUser(w http.ResponseWriter, r *http.Request) {
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	list := models.GetAllUser()
+	list := controllers.GetAllUsers()
 	if len(list) < 1 {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, "Could not find any user!")
 	}

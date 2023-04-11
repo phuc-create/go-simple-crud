@@ -25,9 +25,9 @@ func main() {
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUsername, dbPassword, dbName)
 	db, err := sql.Open("postgres", connStr)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 	router, err := router2.NewRouter(db)
 	if err != nil {
 		log.Fatalf("error initializing router: %v", err)
