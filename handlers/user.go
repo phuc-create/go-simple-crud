@@ -1,8 +1,12 @@
 package handlers
 
 import (
+	"encoding/json"
 	"github.com/phuc-create/go-simple-crud/controllers"
+	"github.com/phuc-create/go-simple-crud/models"
+	"math/rand"
 	"net/http"
+	"strconv"
 
 	"github.com/phuc-create/go-simple-crud/helpers"
 )
@@ -30,8 +34,19 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
-	// var user entities.User
-	// err := json.NewDecoder(r.Body).Decode(&user)
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
+	}
+	user.ID = strconv.Itoa(rand.Intn(10000000))
+	newUser, err := controllers.CreateUser(&user)
+	if err != nil {
+		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	helpers.ResponseWithJSON(w, http.StatusOK, newUser)
+
 }
 
 // func UpdateUser()
