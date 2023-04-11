@@ -1,8 +1,24 @@
 version: "3.8"
+# start yaml
+
 services:
-  web:
-    build: .
+  postgres:
+    container_name: ${PROJECT_NAME}-postgres
+    image: postgres
     ports:
-      - 3000:3000
-    volumes:
-      - .:usr/src/app
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=simple-crud
+  pgadmin:
+    container_name: ${PROJECT_NAME}-pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "5050:88"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: phuc82908@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+

@@ -20,8 +20,8 @@ func removeSpecificElInArr(arr []*entities.User, index int) []*entities.User {
 }
 
 func CreateUser(user *entities.User) bool {
-	if user.Id != "" && user.Username != "" && user.Password != "" {
-		if userFind, _ := FindUser(user.Id); userFind == nil {
+	if user.ID != "" && user.Username != "" && user.Password != "" {
+		if userFind, _ := FindUser(user.ID); userFind == nil {
 			listUser = append(listUser, user)
 			return true
 		}
@@ -32,7 +32,7 @@ func CreateUser(user *entities.User) bool {
 
 func UpdateUser(newUser *entities.User) bool {
 	for index, user := range listUser {
-		if user.Id == newUser.Id {
+		if user.ID == newUser.ID {
 			listUser[index] = newUser
 			return true
 		}
@@ -42,7 +42,7 @@ func UpdateUser(newUser *entities.User) bool {
 }
 func DeleteUser(id string) bool {
 	for idx, user := range listUser {
-		if user.Id == id {
+		if user.ID == id {
 			listUser = removeSpecificElInArr(listUser, idx)
 			return true
 		}
@@ -52,7 +52,7 @@ func DeleteUser(id string) bool {
 
 func FindUser(id string) (*entities.User, error) {
 	for _, user := range listUser {
-		if user.Id == id {
+		if user.ID == id {
 			return user, nil
 		}
 	}
