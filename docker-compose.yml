@@ -14,7 +14,7 @@ services:
       - POSTGRES_DB=simple-crud
   pgadmin:
     container_name: ${PROJECT_NAME}-pgadmin4
-    image: dpage/pgadmin4
+    image: page/pgadmin4
     restart: always
     ports:
       - "5050:88"

@@ -3,9 +3,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"github.com/phuc-create/go-simple-crud/controllers"
 	router2 "github.com/phuc-create/go-simple-crud/router"
 	"log"
-	"net/http"
 	"os"
 )
 
@@ -28,10 +28,10 @@ func main() {
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
-	router, err := router2.NewRouter(db)
+	userController := controllers.New(db)
+	router2.New(db, userController)
 	if err != nil {
 		log.Fatalf("error initializing router: %v", err)
 	}
 
-	log.Fatal(http.ListenAndServe(":3000", router))
 }
