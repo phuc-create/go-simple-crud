@@ -14,13 +14,13 @@ func GetAllUser(writer http.ResponseWriter, request *http.Request) {
 
 }
 
-func (h Handler) GetUser(w http.ResponseWriter, r *http.Request) {
+func (h Handler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	ids, ok := r.URL.Query()["id"]
 	if !ok || len(ids) < 1 {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, "User Not Found!Pls check again.")
 		return
 	}
-	user, err := h.userControllers.GetUserByID(ids[0])
+	user, err := h.userServices.GetUserByID(ids[0])
 	if err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 	}
@@ -29,7 +29,7 @@ func (h Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 func (h Handler) GetAllUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	list, _ := h.userControllers.GetAllUser()
+	list, _ := h.userServices.GetAllUser()
 	if len(list) < 1 {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, "Could not find any user!")
 	}
@@ -43,7 +43,7 @@ func (h Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 	}
 	user.ID = strconv.Itoa(rand.Intn(10000000))
-	newUser, err := h.userControllers.CreateUser(&user)
+	newUser, err := h.userServices.CreateUser(&user)
 	if err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 		return

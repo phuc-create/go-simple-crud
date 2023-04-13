@@ -5,10 +5,10 @@ import (
 )
 
 type Handler struct {
-	userServices controllers.Services
+	userServices controllers.Controllers
 }
 
-func New(userSvc controllers.Services) Handler {
+func New(userSvc controllers.Controllers) Handler {
 	return Handler{
 		userServices: userSvc,
 	}

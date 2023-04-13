@@ -5,7 +5,7 @@ import (
 	"github.com/phuc-create/go-simple-crud/models"
 )
 
-type Services interface {
+type Controllers interface {
 	GetAllUser() ([]*models.User, error)
 	GetUserByID(userID string) (models.User, error)
 	CreateUser(user *models.User) (models.User, error)
@@ -18,6 +18,6 @@ type implement struct {
 }
 
 // New Dependency injection
-func New(db *sql.DB) Services {
+func New(db *sql.DB) Controllers {
 	return implement{db: db}
 }
