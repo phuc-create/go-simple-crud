@@ -54,5 +54,20 @@ func (h Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	helpers.ResponseWithJSON(w, http.StatusOK, newUser)
+}
+
+func (h Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	userID := chi.URLParam(r, "userID")
+	if userID == "" {
+		helpers.ResponseWithErrs(w, http.StatusBadRequest, "User Not Found!Pls check again.")
+		return
+	}
+	result, err := h.userServices.DeleteUser(userID)
+
+	if err != nil {
+		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	helpers.ResponseWithJSON(w, http.StatusOK, result)
 
 }
