@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/go-chi/chi/v5"
 	"github.com/phuc-create/go-simple-crud/models"
 	"math/rand"
 	"net/http"
@@ -14,19 +16,23 @@ func GetAllUser(writer http.ResponseWriter, request *http.Request) {
 
 }
 
+// GetUserByID return user following id
 func (h Handler) GetUserByID(w http.ResponseWriter, r *http.Request) {
-	ids, ok := r.URL.Query()["id"]
-	if !ok || len(ids) < 1 {
+	userID := chi.URLParam(r, "userID")
+	fmt.Println(userID)
+	if userID == "" {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, "User Not Found!Pls check again.")
 		return
 	}
-	user, err := h.userServices.GetUserByID(ids[0])
+	user, err := h.userServices.GetUserByID(userID)
 	if err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
+		return
 	}
 	helpers.ResponseWithJSON(w, http.StatusOK, user)
 }
 
+// GetAllUser return all users available in DB
 func (h Handler) GetAllUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	list, _ := h.userServices.GetAllUser()
@@ -36,6 +42,7 @@ func (h Handler) GetAllUser(w http.ResponseWriter, r *http.Request) {
 	helpers.ResponseWithJSON(w, http.StatusOK, list)
 }
 
+// CreateUser create new user
 func (h Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)

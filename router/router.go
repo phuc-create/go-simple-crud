@@ -74,5 +74,6 @@ func (mr MasterRouter) initUserRoutes() {
 	mr.Router.Group(func(r chi.Router) {
 		r.Get(prefix+"/users", mr.Handler.GetAllUser)
 		r.Post(prefix+"/user", mr.Handler.CreateUser)
+		r.Get(prefix+"/user/{userID}", mr.Handler.GetUserByID)
 	})
 }
