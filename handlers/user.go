@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/phuc-create/go-simple-crud/models"
 	"math/rand"
@@ -19,7 +18,6 @@ func GetAllUser(writer http.ResponseWriter, request *http.Request) {
 // GetUserByID return user following id
 func (h Handler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "userID")
-	fmt.Println(userID)
 	if userID == "" {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, "User Not Found!Pls check again.")
 		return
