@@ -12,17 +12,18 @@ func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 
 }
 
-func GetAllUser() []*models.User {
-	return users
+func (i implement) GetAllUser() ([]*models.User, error) {
+	return users, nil
 
 }
 
-func CreateUser(user *models.User) (models.User, error) {
+func (i implement) CreateUser(user *models.User) (models.User, error) {
 	if user.ID == "" || user.Username == "" || user.Password == "" {
 		return models.User{}, errors.New("missing information. please check again")
 	}
 
-	if userFind, _ := FindUser(user.ID); userFind == nil {
+	_, err := i.GetUserByID(user.ID)
+	if err != nil {
 		users = append(users, user)
 		return models.User{
 			ID:       user.ID,
@@ -30,7 +31,7 @@ func CreateUser(user *models.User) (models.User, error) {
 			Password: user.Password,
 		}, nil
 	}
-	return models.User{}, errors.New("something went wrong")
+	return models.User{}, err
 }
 
 func UpdateUser(newUser *models.User) bool {
@@ -53,12 +54,32 @@ func DeleteUser(id string) bool {
 	return false
 }
 
-func FindUser(id string) (*models.User, error) {
+func (i implement) GetUserByID(userID string) (models.User, error) {
 	for _, user := range users {
-		if user.ID == id {
-			return user, nil
+		if user.ID == userID {
+			return models.User{
+				ID:       user.ID,
+				Username: user.Username,
+				Password: user.Password,
+			}, nil
 		}
 	}
 
-	return nil, errors.New("user does not exist")
+	return models.User{}, errors.New("user does not exist")
+}
+
+func (i implement) DeleteUser(userID string) (bool, error) {
+	for idx, user := range users {
+
+		if user.ID == userID {
+			users = removeSpecificElInArr(users, idx)
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func (i implement) UpdateUser(user *models.User) (models.User, error) {
+	//TODO implement me
+	panic("implement me")
 }
