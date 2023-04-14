@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"github.com/phuc-create/go-simple-crud/helpers"
 	models "github.com/phuc-create/go-simple-crud/models"
 )
 
@@ -12,17 +13,35 @@ func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 
 }
 
+func validateInfoUser(user models.User) error {
+	if user.ID == "" || user.Username == "" || user.Password == "" {
+		return errors.New("missing information. please check again")
+	}
+
+	isWhiteSpace := helpers.ContainWhiteSpace(user.Password)
+	if isWhiteSpace {
+		return errors.New("password should not contain white space")
+	}
+
+	for _, usr := range users {
+		if usr.Username == user.Username {
+			return errors.New("user already exist")
+		}
+	}
+	return nil
+}
+
 func (i implement) GetAllUser() ([]*models.User, error) {
 	return users, nil
 
 }
 
 func (i implement) CreateUser(user models.User) (models.User, error) {
-	if user.ID == "" || user.Username == "" || user.Password == "" {
-		return models.User{}, errors.New("missing information. please check again")
+	err := validateInfoUser(user)
+	if err != nil {
+		return models.User{}, err
 	}
-
-	_, err := i.GetUserByID(user.ID)
+	_, err = i.GetUserByID(user.ID)
 	if err != nil {
 		users = append(users, &user)
 		return models.User{
