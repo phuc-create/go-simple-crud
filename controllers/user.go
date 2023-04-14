@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"errors"
-	"github.com/phuc-create/go-simple-crud/models"
+	models "github.com/phuc-create/go-simple-crud/models"
 )
 
 var users = make([]*models.User, 0)
@@ -17,14 +17,14 @@ func (i implement) GetAllUser() ([]*models.User, error) {
 
 }
 
-func (i implement) CreateUser(user *models.User) (models.User, error) {
+func (i implement) CreateUser(user models.User) (models.User, error) {
 	if user.ID == "" || user.Username == "" || user.Password == "" {
 		return models.User{}, errors.New("missing information. please check again")
 	}
 
 	_, err := i.GetUserByID(user.ID)
 	if err != nil {
-		users = append(users, user)
+		users = append(users, &user)
 		return models.User{
 			ID:       user.ID,
 			Username: user.Username,
@@ -60,17 +60,18 @@ func (i implement) DeleteUser(userID string) (bool, error) {
 }
 
 func (i implement) UpdateUserByID(user *models.User) (models.User, error) {
-	// if user not found return err, check by id
+	// Check if user exists in the slice
 	for _, usr := range users {
 		if usr.ID == user.ID {
 			usr.Username = user.Username
 			usr.Password = user.Password
 			return models.User{
-				ID:       user.ID,
+				ID:       usr.ID,
 				Username: user.Username,
 				Password: user.Password,
 			}, nil
 		}
 	}
+	// Return error if user not found
 	return models.User{}, errors.New("user not found")
 }

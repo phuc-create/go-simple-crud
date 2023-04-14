@@ -78,6 +78,6 @@ func (mr MasterRouter) initUserRoutes() {
 		r.Post(prefix+"/user", mr.Handler.CreateUser)
 		r.Get(prefix+"/user/{userID}", mr.Handler.GetUserByID)
 		r.Delete(prefix+"/user/{userID}", mr.Handler.DeleteUser)
-		r.Put(prefix+"/user", mr.Handler.UpdateUserByID)
+		r.Put(prefix+"/user/{userID}", mr.Handler.UpdateUserByID)
 	})
 }

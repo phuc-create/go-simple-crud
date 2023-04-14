@@ -5,16 +5,22 @@ import (
 	"github.com/phuc-create/go-simple-crud/models"
 )
 
+type UserInput struct {
+	Username string
+	Password string
+}
+
 type Controllers interface {
 	GetAllUser() ([]*models.User, error)
 	GetUserByID(userID string) (models.User, error)
-	CreateUser(user *models.User) (models.User, error)
+	CreateUser(user models.User) (models.User, error)
 	DeleteUser(userID string) (bool, error)
 	UpdateUserByID(user *models.User) (models.User, error)
 }
 
 type implement struct {
-	db *sql.DB
+	db    *sql.DB
+	input UserInput
 }
 
 // New Dependency injection

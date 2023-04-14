@@ -4,6 +4,11 @@ import (
 	"github.com/phuc-create/go-simple-crud/controllers"
 )
 
+type UserInput struct {
+	Username string
+	Password string
+}
+
 type Handler struct {
 	userServices controllers.Controllers
 }
