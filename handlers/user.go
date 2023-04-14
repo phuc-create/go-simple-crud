@@ -69,5 +69,33 @@ func (h Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	helpers.ResponseWithJSON(w, http.StatusOK, result)
+}
 
+func (h Handler) UpdateUserByID(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	if user.ID == "" {
+		helpers.ResponseWithErrs(w, http.StatusBadRequest, "could not find any user")
+		return
+	}
+	if user.Username == "" {
+		helpers.ResponseWithErrs(w, http.StatusBadRequest, "username could not be empty")
+		return
+	}
+
+	if user.Password == "" {
+		helpers.ResponseWithErrs(w, http.StatusBadRequest, "password could not be empty")
+		return
+	}
+	result, err := h.userServices.UpdateUserByID(&user)
+
+	if err != nil {
+		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	helpers.ResponseWithJSON(w, http.StatusOK, result)
 }

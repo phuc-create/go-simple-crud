@@ -72,9 +72,12 @@ func (mr MasterRouter) initUserRoutes() {
 	prefix := "/api"
 
 	mr.Router.Group(func(r chi.Router) {
+		r.NotFound(NotFound)
+		r.MethodNotAllowed(MethodNotAllowed)
 		r.Get(prefix+"/users", mr.Handler.GetAllUser)
 		r.Post(prefix+"/user", mr.Handler.CreateUser)
 		r.Get(prefix+"/user/{userID}", mr.Handler.GetUserByID)
 		r.Delete(prefix+"/user/{userID}", mr.Handler.DeleteUser)
+		r.Put(prefix+"/user", mr.Handler.UpdateUserByID)
 	})
 }

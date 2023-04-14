@@ -10,7 +10,7 @@ type Controllers interface {
 	GetUserByID(userID string) (models.User, error)
 	CreateUser(user *models.User) (models.User, error)
 	DeleteUser(userID string) (bool, error)
-	UpdateUser(user *models.User) (models.User, error)
+	UpdateUserByID(user *models.User) (models.User, error)
 }
 
 type implement struct {

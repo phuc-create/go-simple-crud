@@ -34,26 +34,6 @@ func (i implement) CreateUser(user *models.User) (models.User, error) {
 	return models.User{}, err
 }
 
-func UpdateUser(newUser *models.User) bool {
-	for index, user := range users {
-		if user.ID == newUser.ID {
-			users[index] = newUser
-			return true
-		}
-	}
-
-	return false
-}
-func DeleteUser(id string) bool {
-	for idx, user := range users {
-		if user.ID == id {
-			users = removeSpecificElInArr(users, idx)
-			return true
-		}
-	}
-	return false
-}
-
 func (i implement) GetUserByID(userID string) (models.User, error) {
 	for _, user := range users {
 		if user.ID == userID {
@@ -79,7 +59,18 @@ func (i implement) DeleteUser(userID string) (bool, error) {
 	return false, nil
 }
 
-func (i implement) UpdateUser(user *models.User) (models.User, error) {
-	//TODO implement me
-	panic("implement me")
+func (i implement) UpdateUserByID(user *models.User) (models.User, error) {
+	// if user not found return err, check by id
+	for _, usr := range users {
+		if usr.ID == user.ID {
+			usr.Username = user.Username
+			usr.Password = user.Password
+			return models.User{
+				ID:       user.ID,
+				Username: user.Username,
+				Password: user.Password,
+			}, nil
+		}
+	}
+	return models.User{}, errors.New("user not found")
 }
