@@ -5,8 +5,9 @@ import (
 )
 
 type UserInput struct {
-	Username string
-	Password string
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type Handler struct {

@@ -13,7 +13,7 @@ func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 
 }
 
-func validateInfoUser(user models.User) error {
+func validateInfoUser(user UserInput) error {
 	if user.ID == "" || user.Username == "" || user.Password == "" {
 		return errors.New("missing information. please check again")
 	}
@@ -37,18 +37,18 @@ func (i implement) GetAllUser() ([]*models.User, error) {
 }
 
 func (i implement) CreateUser(user models.User) (models.User, error) {
-	err := validateInfoUser(user)
+	err := validateInfoUser(UserInput{
+		ID:       user.ID,
+		Username: user.Username,
+		Password: user.Password,
+	})
 	if err != nil {
 		return models.User{}, err
 	}
 	_, err = i.GetUserByID(user.ID)
 	if err != nil {
 		users = append(users, &user)
-		return models.User{
-			ID:       user.ID,
-			Username: user.Username,
-			Password: user.Password,
-		}, nil
+		return user, nil
 	}
 	return models.User{}, err
 }

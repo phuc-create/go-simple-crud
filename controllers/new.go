@@ -6,8 +6,9 @@ import (
 )
 
 type UserInput struct {
-	Username string
-	Password string
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type Controllers interface {
@@ -19,8 +20,7 @@ type Controllers interface {
 }
 
 type implement struct {
-	db    *sql.DB
-	input UserInput
+	db *sql.DB
 }
 
 // New Dependency injection

@@ -9,8 +9,8 @@ import (
 	"net/http"
 )
 
-func validateInfoUser(userID string, user UserInput, w http.ResponseWriter) error {
-	if userID == "" {
+func validateInfoUser(user UserInput) error {
+	if user.ID == "" {
 		return errors.New("could not find any user")
 	}
 
@@ -94,7 +94,11 @@ func (h Handler) UpdateUserByID(w http.ResponseWriter, r *http.Request) {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = validateInfoUser(userID, user, w)
+	err = validateInfoUser(UserInput{
+		ID:       userID,
+		Username: user.Username,
+		Password: user.Password,
+	})
 	if err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 		return
