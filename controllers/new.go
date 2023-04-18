@@ -11,6 +11,7 @@ type UserInput struct {
 	Password string `json:"password"`
 }
 
+//go:generate mockery --name Controllers
 type Controllers interface {
 	GetAllUser() ([]*models.User, error)
 	GetUserByID(userID string) (models.User, error)
