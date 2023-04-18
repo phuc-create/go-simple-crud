@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/jinzhu/gorm v1.9.16
+	github.com/lib/pq v1.10.8
 )
 
 require (

@@ -2,6 +2,7 @@ package router
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/phuc-create/go-simple-crud/controllers"
@@ -61,6 +62,7 @@ func New(db *sql.DB, controllers controllers.Controllers) {
 		Handler: newHandler,
 	}
 	r.initRoutes()
+	fmt.Println("server listening & serve at localhost:3000")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }
 
