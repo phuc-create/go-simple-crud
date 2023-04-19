@@ -1,10 +1,13 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+)
 
 type User struct {
-	gorm.Model
-	ID       string `gorm:"ID,omitempty"`
-	Username string `gorm:"Username,omitempty"`
-	Password string `gorm:"Password,omitempty"`
+	ID        string    `gorm:"id,primaryKey,omitempty"`
+	Username  string    `gorm:"username,omitempty"`
+	Password  string    `gorm:"password,omitempty"`
+	CreatedAt time.Time `gorm:"created_at"`
+	UpdatedAt time.Time `gorm:"updated_at"`
 }

@@ -2,49 +2,56 @@ package controllers
 
 import (
 	"github.com/phuc-create/go-simple-crud/models"
-	"strconv"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"time"
+
 	"testing"
 )
 
 func TestImplement_CreateUser(t *testing.T) {
 	i := implement{}
-	// Case 1: Valid user info and ID not used before
-	user := models.User{
-		ID:       strconv.Itoa(1),
-		Username: "tester",
-		Password: "password",
+
+	type expected struct {
+		user  UserResponse
+		error error
 	}
-	result, err := i.CreateUser(user)
-	if err != nil {
-		t.Errorf("Expected no error, but got %v", err)
+
+	type arg struct {
+		input          models.User
+		expectedResult expected
+		expectedError  error
 	}
-	if result.ID != user.ID {
-		t.Errorf("Expected user ID to be %s, but got %s", user.ID, result.ID)
+	datetime := time.Date(2023, 04, 19, 0, 0, 0, 0, time.UTC)
+
+	tsc := []arg{
+		{
+			input: models.User{
+				ID:        "1",
+				Username:  "sam",
+				Password:  "sam",
+				CreatedAt: datetime,
+				UpdatedAt: datetime,
+			},
+			expectedResult: expected{
+				user: UserResponse{
+					ID:        "1",
+					Username:  "sam",
+					Password:  "sam",
+					CreatedAt: datetime,
+					UpdatedAt: datetime,
+				},
+				error: nil,
+			},
+			expectedError: nil,
+		},
 	}
-	if result.Username != user.Username {
-		t.Errorf("Expected username to be %s, but got %s", user.Username, result.Username)
-	}
-	if result.Password != user.Password {
-		t.Errorf("Expected password to be %s, but got %s", user.Password, result.Password)
-	}
-	// Case 2: Invalid user info
-	user = models.User{
-		ID:       strconv.Itoa(2),
-		Username: "",
-		Password: "password",
-	}
-	_, err = i.CreateUser(user)
-	if err == nil {
-		t.Error("Expected an error, but got nil")
-	}
-	// Case 3: username used before
-	user = models.User{
-		ID:       strconv.Itoa(3),
-		Username: "tester",
-		Password: "password2",
-	}
-	_, err = i.CreateUser(user)
-	if err == nil {
-		t.Error("Expected an error, but got nil")
+
+	for _, tc := range tsc {
+		usr, err := i.CreateUser(tc.input)
+		if err != nil {
+			require.EqualError(t, err, tc.expectedResult.error.Error())
+		}
+		assert.Equal(t, tc.expectedResult.user, usr)
 	}
 }

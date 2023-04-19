@@ -36,30 +36,36 @@ func (i implement) GetAllUser() ([]*models.User, error) {
 
 }
 
-func (i implement) CreateUser(user models.User) (models.User, error) {
-	err := validateInfoUser(UserInput{
+func (i implement) CreateUser(user models.User) (UserResponse, error) {
+	if err := validateInfoUser(UserInput{
 		ID:       user.ID,
 		Username: user.Username,
 		Password: user.Password,
-	})
-	if err != nil {
-		return models.User{}, err
+	}); err != nil {
+		return UserResponse{}, err
 	}
-	_, err = i.GetUserByID(user.ID)
-	if err != nil {
-		users = append(users, &user)
-		return user, nil
+
+	if _, err := i.GetUserByID(user.ID); err != nil {
+		return UserResponse{}, err
 	}
-	return models.User{}, err
+
+	users = append(users, &user)
+	return UserResponse{
+		ID:       user.ID,
+		Username: user.Username,
+		Password: user.Password,
+	}, nil
 }
 
 func (i implement) GetUserByID(userID string) (models.User, error) {
 	for _, user := range users {
 		if user.ID == userID {
 			return models.User{
-				ID:       user.ID,
-				Username: user.Username,
-				Password: user.Password,
+				ID:        user.ID,
+				Username:  user.Username,
+				Password:  user.Password,
+				CreatedAt: user.CreatedAt,
+				UpdatedAt: user.UpdatedAt,
 			}, nil
 		}
 	}

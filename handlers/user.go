@@ -7,6 +7,7 @@ import (
 	"github.com/phuc-create/go-simple-crud/helpers"
 	"github.com/phuc-create/go-simple-crud/models"
 	"net/http"
+	"time"
 )
 
 func validateInfoUser(user UserInput) error {
@@ -58,9 +59,11 @@ func (h Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newUser, err := h.userServices.CreateUser(models.User{
-		ID:       helpers.GenerateID(),
-		Username: user.Username,
-		Password: user.Password,
+		ID:        helpers.GenerateID(),
+		Username:  user.Username,
+		Password:  user.Password,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	})
 	if err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
