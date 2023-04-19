@@ -1,9 +1,9 @@
 package user
 
 import (
-	"fmt"
 	"github.com/phuc-create/go-simple-crud/helpers"
 	models "github.com/phuc-create/go-simple-crud/models"
+	"log"
 	"time"
 )
 
@@ -33,14 +33,29 @@ func validateInfoUser(user UserInput) error {
 }
 
 func (i implement) GetAllUser() ([]*models.User, error) {
-	rs, err := i.db.Exec("select * from schema_migrations")
-	fmt.Println(rs)
+	var users []*models.User
+	statement := "select * from user_account"
+	rows, err := i.db.Query(statement)
 	if err != nil {
 		return []*models.User{}, err
 	}
+	defer rows.Close()
 
+	var user models.User
+	for rows.Next() {
+		err := rows.Scan(
+			&user.ID,
+			&user.Username,
+			&user.Password,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
+		users = append(users, &user)
+	}
 	return users, nil
-
 }
 
 func (i implement) CreateUser(user models.User) (models.User, error) {
