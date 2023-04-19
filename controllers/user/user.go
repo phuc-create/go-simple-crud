@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"github.com/phuc-create/go-simple-crud/helpers"
 	models "github.com/phuc-create/go-simple-crud/models"
 	"time"
@@ -32,6 +33,12 @@ func validateInfoUser(user UserInput) error {
 }
 
 func (i implement) GetAllUser() ([]*models.User, error) {
+	rs, err := i.db.Exec("select * from schema_migrations")
+	fmt.Println(rs)
+	if err != nil {
+		return []*models.User{}, err
+	}
+
 	return users, nil
 
 }
