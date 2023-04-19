@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/phuc-create/go-simple-crud/controllers"
+	"github.com/phuc-create/go-simple-crud/controllers/user"
 )
 
 type UserInput struct {
@@ -11,10 +11,10 @@ type UserInput struct {
 }
 
 type Handler struct {
-	userServices controllers.Controllers
+	userServices user.Controllers
 }
 
-func New(userSvc controllers.Controllers) Handler {
+func New(userSvc user.Controllers) Handler {
 	return Handler{
 		userServices: userSvc,
 	}

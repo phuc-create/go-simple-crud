@@ -1,4 +1,4 @@
-package controllers
+package user
 
 import (
 	"database/sql"
@@ -23,7 +23,7 @@ type UserResponse struct {
 type Controllers interface {
 	GetAllUser() ([]*models.User, error)
 	GetUserByID(userID string) (models.User, error)
-	CreateUser(user models.User) (UserResponse, error)
+	CreateUser(user models.User) (models.User, error)
 	DeleteUser(userID string) (bool, error)
 	UpdateUserByID(user *models.User) (models.User, error)
 }

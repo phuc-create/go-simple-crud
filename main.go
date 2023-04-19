@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/phuc-create/go-simple-crud/controllers"
+	"github.com/phuc-create/go-simple-crud/controllers/user"
 	router2 "github.com/phuc-create/go-simple-crud/router"
 	"log"
 	"os"
@@ -29,6 +29,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	userController := controllers.New(db)
+	userController := user.New(db)
 	router2.New(db, userController)
 }

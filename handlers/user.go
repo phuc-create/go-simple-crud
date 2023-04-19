@@ -92,17 +92,15 @@ func (h Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 func (h Handler) UpdateUserByID(w http.ResponseWriter, r *http.Request) {
 	var user UserInput
 	userID := chi.URLParam(r, "userID")
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = validateInfoUser(UserInput{
+	if err := validateInfoUser(UserInput{
 		ID:       userID,
 		Username: user.Username,
 		Password: user.Password,
-	})
-	if err != nil {
+	}); err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 		return
 	}
