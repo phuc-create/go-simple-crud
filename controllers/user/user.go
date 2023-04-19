@@ -1,8 +1,9 @@
 package user
 
 import (
+	"database/sql"
 	"github.com/phuc-create/go-simple-crud/helpers"
-	models "github.com/phuc-create/go-simple-crud/models"
+	"github.com/phuc-create/go-simple-crud/models"
 	"log"
 	"time"
 )
@@ -23,23 +24,22 @@ func validateInfoUser(user UserInput) error {
 	if isWhiteSpace {
 		return ErrPasswordContainWhiteSpace
 	}
-
-	for _, usr := range users {
-		if usr.Username == user.Username {
-			return ErrUserAlreadyExist
-		}
-	}
 	return nil
 }
 
-func (i implement) GetAllUser() ([]*models.User, error) {
-	var users []*models.User
-	statement := "select * from user_account"
+func (i implement) GetAllUser() ([]models.User, error) {
+	var users []models.User
+	statement := "SELECT * FROM user_account"
 	rows, err := i.db.Query(statement)
 	if err != nil {
-		return []*models.User{}, err
+		return []models.User{}, err
 	}
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+
+		}
+	}(rows)
 
 	var user models.User
 	for rows.Next() {
@@ -53,9 +53,17 @@ func (i implement) GetAllUser() ([]*models.User, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		users = append(users, &user)
+		users = append(users, user)
 	}
 	return users, nil
+}
+func (i implement) IsUserExist(username string) bool {
+	statement := "SELECT username FROM user_account WHERE username=$1"
+	err := i.db.QueryRow(statement, username).Scan(&username)
+	if err != nil {
+		return false
+	}
+	return true
 }
 
 func (i implement) CreateUser(user models.User) (models.User, error) {
@@ -66,31 +74,34 @@ func (i implement) CreateUser(user models.User) (models.User, error) {
 	}); err != nil {
 		return models.User{}, err
 	}
-
-	users = append(users, &user)
-	return models.User{
-		ID:        user.ID,
-		Username:  user.Username,
-		Password:  user.Password,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-	}, nil
+	if exist := i.IsUserExist(user.Username); exist {
+		return models.User{}, ErrUserAlreadyExist
+	}
+	statement := "INSERT INTO user_account (id,username,password,created_at,updated_at) VALUES ($1,$2,$3,$4,$5)"
+	if _, err := i.db.Exec(
+		statement,
+		user.ID,
+		user.Username,
+		user.Password,
+		user.CreatedAt,
+		user.UpdatedAt,
+	); err != nil {
+		return models.User{}, err
+	}
+	return user, nil
 }
 
 func (i implement) GetUserByID(userID string) (models.User, error) {
-	for _, user := range users {
-		if user.ID == userID {
-			return models.User{
-				ID:        user.ID,
-				Username:  user.Username,
-				Password:  user.Password,
-				CreatedAt: user.CreatedAt,
-				UpdatedAt: user.UpdatedAt,
-			}, nil
+	var user models.User
+	statement := "SELECT * FROM user_account WHERE id=$1"
+	err := i.db.QueryRow(statement, userID).Scan(&user.ID, &user.Username, &user.Password, &user.CreatedAt, &user.UpdatedAt)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return models.User{}, err
 		}
+		return models.User{}, ErrUserDoesNotExist
 	}
-
-	return models.User{}, ErrUserDoesNotExist
+	return user, nil
 }
 
 func (i implement) DeleteUser(userID string) (bool, error) {

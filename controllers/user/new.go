@@ -21,7 +21,7 @@ type UserResponse struct {
 }
 
 type Controllers interface {
-	GetAllUser() ([]*models.User, error)
+	GetAllUser() ([]models.User, error)
 	GetUserByID(userID string) (models.User, error)
 	CreateUser(user models.User) (models.User, error)
 	DeleteUser(userID string) (bool, error)
