@@ -3,8 +3,11 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/phuc-create/go-simple-crud/controllers"
+	godotenv "github.com/joho/godotenv"
+	_ "github.com/lib/pq"
+	"github.com/phuc-create/go-simple-crud/controllers/user"
 	router2 "github.com/phuc-create/go-simple-crud/router"
+	"log"
 	"os"
 )
 
@@ -16,17 +19,21 @@ const (
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal(err)
+	}
 	dbHost := os.Getenv("DB_HOST")
 	dbName := os.Getenv("DB_NAME")
 	dbPort := os.Getenv("DB_PORT")
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUsername, dbPassword, dbName)
-	db, _ := sql.Open("postgres", connStr)
+	fmt.Println("Connection string: ", connStr)
+	db, err := sql.Open("postgres", connStr)
 
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	userController := controllers.New(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+	userController := user.New(db)
 	router2.New(db, userController)
 }

@@ -2,9 +2,10 @@ package router
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/phuc-create/go-simple-crud/controllers"
+	"github.com/phuc-create/go-simple-crud/controllers/user"
 	"github.com/phuc-create/go-simple-crud/handlers"
 	"log"
 	"net/http"
@@ -51,7 +52,7 @@ func MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 //	return r, nil
 //}
 
-func New(db *sql.DB, controllers controllers.Controllers) {
+func New(db *sql.DB, controllers user.Controllers) {
 	newHandler := handlers.New(controllers)
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
@@ -61,6 +62,7 @@ func New(db *sql.DB, controllers controllers.Controllers) {
 		Handler: newHandler,
 	}
 	r.initRoutes()
+	fmt.Println("server listening & serve at localhost:3000")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }
 

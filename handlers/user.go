@@ -7,6 +7,7 @@ import (
 	"github.com/phuc-create/go-simple-crud/helpers"
 	"github.com/phuc-create/go-simple-crud/models"
 	"net/http"
+	"time"
 )
 
 func validateInfoUser(user UserInput) error {
@@ -58,9 +59,11 @@ func (h Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newUser, err := h.userServices.CreateUser(models.User{
-		ID:       helpers.GenerateID(),
-		Username: user.Username,
-		Password: user.Password,
+		ID:        helpers.GenerateID(),
+		Username:  user.Username,
+		Password:  user.Password,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	})
 	if err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
@@ -89,17 +92,15 @@ func (h Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 func (h Handler) UpdateUserByID(w http.ResponseWriter, r *http.Request) {
 	var user UserInput
 	userID := chi.URLParam(r, "userID")
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = validateInfoUser(UserInput{
+	if err := validateInfoUser(UserInput{
 		ID:       userID,
 		Username: user.Username,
 		Password: user.Password,
-	})
-	if err != nil {
+	}); err != nil {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 		return
 	}
