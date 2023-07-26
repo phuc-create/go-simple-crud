@@ -5,7 +5,6 @@ import (
 	"github.com/phuc-create/go-simple-crud/helpers"
 	"github.com/phuc-create/go-simple-crud/models"
 	"log"
-	"time"
 )
 
 var users = make([]*models.User, 0)
@@ -15,7 +14,7 @@ func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 
 }
 
-func validateInfoUser(user UserInput) error {
+func validateInfoUser(user models.User) error {
 	if user.ID == "" || user.Username == "" || user.Password == "" {
 		return ErrMissingInformation
 	}
@@ -57,7 +56,8 @@ func (i implement) GetAllUser() ([]models.User, error) {
 	}
 	return users, nil
 }
-func (i implement) IsUserExist(username string) bool {
+
+func (i implement) CheckUserExist(username string) bool {
 	statement := "SELECT username FROM user_account WHERE username=$1"
 	err := i.db.QueryRow(statement, username).Scan(&username)
 	if err != nil {
@@ -67,14 +67,10 @@ func (i implement) IsUserExist(username string) bool {
 }
 
 func (i implement) CreateUser(user models.User) (models.User, error) {
-	if err := validateInfoUser(UserInput{
-		ID:       user.ID,
-		Username: user.Username,
-		Password: user.Password,
-	}); err != nil {
+	if err := validateInfoUser(user); err != nil {
 		return models.User{}, err
 	}
-	if exist := i.IsUserExist(user.Username); exist {
+	if exist := i.CheckUserExist(user.Username); exist {
 		return models.User{}, ErrUserAlreadyExist
 	}
 	statement := "INSERT INTO user_account (id,username,password,created_at,updated_at) VALUES ($1,$2,$3,$4,$5)"
@@ -91,45 +87,44 @@ func (i implement) CreateUser(user models.User) (models.User, error) {
 	return user, nil
 }
 
-func (i implement) GetUserByID(userID string) (models.User, error) {
-	var user models.User
-	statement := "SELECT * FROM user_account WHERE id=$1"
-	err := i.db.QueryRow(statement, userID).Scan(&user.ID, &user.Username, &user.Password, &user.CreatedAt, &user.UpdatedAt)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			return models.User{}, err
-		}
-		return models.User{}, ErrUserDoesNotExist
-	}
-	return user, nil
-}
+//func (i implement) GetUserByID(userID string) (models.User, error) {
+//	var user models.User
+//	statement := "SELECT * FROM user_account WHERE id=$1"
+//	err := i.db.QueryRow(statement, userID).Scan(&user.ID, &user.Username, &user.Password, &user.CreatedAt, &user.UpdatedAt)
+//	if err != nil {
+//		if err != sql.ErrNoRows {
+//			return models.User{}, err
+//		}
+//		return models.User{}, ErrUserDoesNotExist
+//	}
+//	return user, nil
+//}
 
-func (i implement) DeleteUser(userID string) (bool, error) {
-	for idx, user := range users {
+//func (i implement) DeleteUser(userID string) (bool, error) {
+//	for idx, user := range users {
+//
+//		if user.ID == userID {
+//			users = removeSpecificElInArr(users, idx)
+//			return true, nil
+//		}
+//	}
+//	return false, nil
+//}
 
-		if user.ID == userID {
-			users = removeSpecificElInArr(users, idx)
-			return true, nil
-		}
-	}
-	return false, nil
-}
-
-func (i implement) UpdateUserByID(user *models.User) (models.User, error) {
-	// Check if user exists in the slice
-	for _, usr := range users {
-		if usr.ID == user.ID {
-			usr.Username = user.Username
-			usr.Password = user.Password
-			usr.UpdatedAt = time.Now()
-			return models.User{
-				ID:        usr.ID,
-				Username:  user.Username,
-				Password:  user.Password,
-				UpdatedAt: user.UpdatedAt,
-			}, nil
-		}
-	}
-	// Return error if user not found
-	return models.User{}, ErrUserDoesNotExist
-}
+//func (i implement) UpdateUserByID(user *models.User) (models.User, error) {
+//	// Check if user exists in the slice
+//	for _, usr := range users {
+//		if usr.ID == user.ID {
+//			usr.Username = user.Username
+//			usr.Password = user.Password
+//			usr.UpdatedAt = time.Now()
+//			return models.User{
+//				ID:        usr.ID,
+//				Username:  user.Username,
+//				Password:  user.Password,
+//				UpdatedAt: user.UpdatedAt,
+//			}, nil
+//		}
+//	}
+//	return models.User{}, ErrUserDoesNotExist
+//}

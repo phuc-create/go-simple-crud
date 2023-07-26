@@ -32,26 +32,6 @@ func MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("method is not valid"))
 }
 
-//func NewRouter(db *sql.DB, handler handlers.Handler) (*MasterRouter, error) {
-//	prefix := "/api"
-//	router := chi.NewRouter()
-//	router.Use(middleware.Logger)
-//	r := &MasterRouter{
-//		Router: router,
-//		DB:     db,
-//	}
-//	router.NotFound(NotFound)
-//	router.MethodNotAllowed(MethodNotAllowed)
-//
-//	router.Get(prefix+"/", func(w http.ResponseWriter, r *http.Request) {
-//		w.Write([]byte("Hello world!"))
-//	})
-//	router.Get(prefix+"/users", GetAllUser)
-//	router.Post(prefix+"/user", handlers.CreateUser)
-//
-//	return r, nil
-//}
-
 func New(db *sql.DB, controllers user.Controllers) {
 	newHandler := handlers.New(controllers)
 	router := chi.NewRouter()
@@ -71,15 +51,15 @@ func (mr MasterRouter) initRoutes() {
 }
 
 func (mr MasterRouter) initUserRoutes() {
-	prefix := "/api"
+	pattern := "/api/users"
 
 	mr.Router.Group(func(r chi.Router) {
 		r.NotFound(NotFound)
 		r.MethodNotAllowed(MethodNotAllowed)
-		r.Get(prefix+"/users", mr.Handler.GetAllUser)
-		r.Post(prefix+"/user", mr.Handler.CreateUser)
-		r.Get(prefix+"/user/{userID}", mr.Handler.GetUserByID)
-		r.Delete(prefix+"/user/{userID}", mr.Handler.DeleteUser)
-		r.Put(prefix+"/user/{userID}", mr.Handler.UpdateUserByID)
+		r.Get(pattern, mr.Handler.GetAllUser)
+		r.Post(pattern, mr.Handler.CreateUser)
+		//r.Get(pattern+"/{userID}", mr.Handler.GetUserByID)
+		//r.Delete(pattern+"/{userID}", mr.Handler.DeleteUser)
+		//r.Put(pattern+"/{userID}", mr.Handler.UpdateUserByID)
 	})
 }
