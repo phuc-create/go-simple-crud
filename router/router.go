@@ -6,7 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/phuc-create/go-simple-crud/controllers/user"
-	"github.com/phuc-create/go-simple-crud/handlers"
+	"github.com/phuc-create/go-simple-crud/handlers/users"
 	"log"
 	"net/http"
 )
@@ -15,7 +15,7 @@ import (
 type MasterRouter struct {
 	Router  *chi.Mux
 	DB      *sql.DB
-	Handler handlers.Handler
+	Handler users.Handler
 }
 
 func (mr MasterRouter) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -33,7 +33,7 @@ func MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 }
 
 func New(db *sql.DB, controllers user.Controllers) {
-	newHandler := handlers.New(controllers)
+	newHandler := users.New(controllers)
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 	r := &MasterRouter{

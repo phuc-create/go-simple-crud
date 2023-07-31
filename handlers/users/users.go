@@ -1,4 +1,4 @@
-package handlers
+package users
 
 import (
 	"encoding/json"
@@ -56,7 +56,7 @@ func validateInfoUser(user UserInput) error {
 // GetAllUser return all users available in DB
 func (h Handler) GetAllUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	list, _ := h.userServices.GetAllUser()
+	list, _ := h.users.GetAllUser()
 	if len(list) < 1 {
 		helpers.ResponseWithErrs(w, http.StatusInternalServerError, "Could not find any user!")
 	}
@@ -71,7 +71,7 @@ func (h Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 	}
 
-	newUser, err := h.userServices.CreateUser(models.User{
+	newUser, err := h.users.CreateUser(models.User{
 		ID:        helpers.GenerateID(),
 		Username:  user.Username,
 		Password:  user.Password,

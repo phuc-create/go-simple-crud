@@ -14,3 +14,6 @@ migrate-f:
 	migrate -source file://data/migrations -database "postgres://postgres:1@localhost:5432/simple_crud?sslmode=disable" -verbose force 0
 
 redo-db: migrate-f migrate-u
+
+generate:
+	sqlboiler --wipe psql
