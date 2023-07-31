@@ -5,15 +5,14 @@ import (
 	"net/http"
 )
 
-// ResponseWithErrs control errors handling for response
+// ResponseWithErrs control pkgErrors handling for response
 func ResponseWithErrs(w http.ResponseWriter, status int, msg string) {
-	ResponseWithJSON(w, status, map[string]string{"error": msg})
+	ResponseWithJSON(w, status, map[string]interface{}{"error": msg, "status": status})
 }
 
 // ResponseWithJSON control response with json format
 func ResponseWithJSON(w http.ResponseWriter, status int, data interface{}) {
 	result, _ := json.Marshal(data)
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write(result)
 }

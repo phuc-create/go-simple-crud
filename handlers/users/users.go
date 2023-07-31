@@ -1,12 +1,12 @@
 package users
 
 import (
-	"encoding/json"
+	"context"
 	"errors"
-	"github.com/phuc-create/go-simple-crud/helpers"
-	"github.com/phuc-create/go-simple-crud/models"
-	"net/http"
+	http "net/http"
 	"time"
+
+	"github.com/phuc-create/go-simple-crud/helpers"
 )
 
 type UserInput struct {
@@ -25,7 +25,7 @@ type UserResponse struct {
 
 func validateInfoUser(user UserInput) error {
 	if user.ID == "" {
-		return errors.New("could not find any user")
+		return errors.New("could not find any users")
 	}
 
 	if user.Username == "" {
@@ -38,54 +38,56 @@ func validateInfoUser(user UserInput) error {
 	return nil
 }
 
-// GetUserByID return user following id
+// GetUserByID return users following id
 //func (h Handler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 //	userID := chi.URLParam(r, "userID")
 //	if userID == "" {
-//		helpers.ResponseWithErrs(w, http.StatusBadRequest, "Invalid user ID!Pls check again.")
+//		helpers.ResponseWithErrs(w, http.StatusBadRequest, "Invalid users ID!Pls check again.")
 //		return
 //	}
-//	user, err := h.userServices.GetUserByID(userID)
+//	users, err := h.userServices.GetUserByID(userID)
 //	if err != nil {
 //		helpers.ResponseWithErrs(w, http.StatusInternalServerError, err.Error())
 //		return
 //	}
-//	helpers.ResponseWithJSON(w, http.StatusOK, user)
+//	helpers.ResponseWithJSON(w, http.StatusOK, users)
 //}
 
 // GetAllUser return all users available in DB
-func (h Handler) GetAllUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	list, _ := h.users.GetAllUser()
-	if len(list) < 1 {
-		helpers.ResponseWithErrs(w, http.StatusInternalServerError, "Could not find any user!")
+func (h Handler) GetAllUser(ctx context.Context) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		list, err := h.controllers.GetAllUsersController(ctx)
+		if err != nil {
+			helpers.ResponseWithErrs(w, http.StatusInternalServerError, err.Error())
+		}
+		helpers.ResponseWithJSON(w, http.StatusOK, list)
 	}
-	helpers.ResponseWithJSON(w, http.StatusOK, list)
 }
 
-// CreateUser create new user
-func (h Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var user UserInput
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
-	}
+// CreateUser create new users
+//func (h Handler) CreateUser(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+//	var user UserInput
+//	err := json.NewDecoder(r.Body).Decode(&user)
+//	if err != nil {
+//		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
+//	}
+//
+//	newUser, err := h.repo.Users().CreateUser(models.User{
+//		ID:        helpers.GenerateID(),
+//		Username:  user.Username,
+//		Password:  user.Password,
+//		CreatedAt: time.Now(),
+//		UpdatedAt: time.Now(),
+//	})
+//	if err != nil {
+//		helpers.ResponseWithErrs(w, http.StatusInternalServerError, err.Error())
+//		return
+//	}
+//	helpers.ResponseWithJSON(w, http.StatusOK, newUser)
+//}
 
-	newUser, err := h.users.CreateUser(models.User{
-		ID:        helpers.GenerateID(),
-		Username:  user.Username,
-		Password:  user.Password,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	})
-	if err != nil {
-		helpers.ResponseWithErrs(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	helpers.ResponseWithJSON(w, http.StatusOK, newUser)
-}
-
-// DeleteUser delete a user
+// DeleteUser delete a users
 //func (h Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 //	userID := chi.URLParam(r, "userID")
 //	if userID == "" {
@@ -101,26 +103,26 @@ func (h Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 //	helpers.ResponseWithJSON(w, http.StatusOK, result)
 //}
 
-// UpdateUserByID update user following ID
+// UpdateUserByID update users following ID
 //func (h Handler) UpdateUserByID(w http.ResponseWriter, r *http.Request) {
-//	var user UserInput
+//	var users UserInput
 //	userID := chi.URLParam(r, "userID")
-//	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+//	if err := json.NewDecoder(r.Body).Decode(&users); err != nil {
 //		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 //		return
 //	}
 //	if err := validateInfoUser(UserInput{
 //		ID:       userID,
-//		Username: user.Username,
-//		Password: user.Password,
+//		Username: users.Username,
+//		Password: users.Password,
 //	}); err != nil {
 //		helpers.ResponseWithErrs(w, http.StatusBadRequest, err.Error())
 //		return
 //	}
 //	result, err := h.userServices.UpdateUserByID(&models.User{
 //		ID:       userID,
-//		Username: user.Username,
-//		Password: user.Password,
+//		Username: users.Username,
+//		Password: users.Password,
 //	})
 //
 //	if err != nil {
