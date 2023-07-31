@@ -1,0 +1,16 @@
+schema   = "public"
+pkgname  = "orm"
+output   = "internal/repository/orm"
+wipe     = true
+no-hooks = true
+no-tests = true
+add-enum-types = true
+
+[psql]
+    dbname = "simple_crud"
+    host   = "localhost"
+    port   = 5432
+    user   = "postgres"
+    pass   = "1"
+    sslmode = "disable"
+    blacklist = ["schema_migrations", "other"]
