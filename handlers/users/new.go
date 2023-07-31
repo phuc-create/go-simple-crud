@@ -1,15 +1,15 @@
 package users
 
 import (
-	"github.com/phuc-create/go-simple-crud/controllers/user"
+	"github.com/phuc-create/go-simple-crud/internal/repository/controllers/users"
 )
 
 type Handler struct {
-	users user.Controllers
+	controllers users.Controllers
 }
 
-func New(userSvc user.Controllers) Handler {
+func New(controllers users.Controllers) Handler {
 	return Handler{
-		users: userSvc,
+		controllers: controllers,
 	}
 }

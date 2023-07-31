@@ -1,16 +1,18 @@
-package user
+package users
 
 import (
+	"context"
 	"github.com/phuc-create/go-simple-crud/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"time"
-
 	"testing"
+	"time"
 )
 
 func TestImplement_CreateUser(t *testing.T) {
+	ctx := context.Background()
 	i := implement{}
+
 	datetime := time.Date(2023, 04, 19, 0, 0, 0, 0, time.UTC)
 
 	type expected struct {
@@ -24,7 +26,7 @@ func TestImplement_CreateUser(t *testing.T) {
 	}
 
 	tsc := map[string]arg{
-		"success: create user successfully": {
+		"success: create users successfully": {
 
 			input: models.User{
 				ID:        "1",
@@ -57,7 +59,7 @@ func TestImplement_CreateUser(t *testing.T) {
 				error: ErrMissingInformation,
 			},
 		},
-		"fail: error user already exist": {
+		"fail: error users already exist": {
 			input: models.User{
 				ID:        "1",
 				Username:  "sam",
@@ -86,10 +88,11 @@ func TestImplement_CreateUser(t *testing.T) {
 	}
 
 	for _, tc := range tsc {
-		usr, err := i.CreateUser(tc.input)
+		usr, err := i.CreateUserController(ctx, tc.input)
 		if err != nil {
 			require.EqualError(t, err, tc.expectedResult.error.Error())
 		}
 		assert.Equal(t, tc.expectedResult.user, usr)
 	}
+
 }

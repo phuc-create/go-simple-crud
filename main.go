@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"github.com/phuc-create/go-simple-crud/controllers/user"
+	"github.com/phuc-create/go-simple-crud/internal/repository"
+	"github.com/phuc-create/go-simple-crud/internal/repository/controllers/users"
 	router2 "github.com/phuc-create/go-simple-crud/router"
 	"log"
 	"os"
@@ -19,6 +21,7 @@ const (
 )
 
 func main() {
+	ctx := context.Background()
 	if err := godotenv.Load(); err != nil {
 		log.Fatal(err)
 	}
@@ -29,7 +32,7 @@ func main() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 
 	connStr := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		"host=%s port=%s users=%s password=%s dbname=%s sslmode=disable",
 		dbHost,
 		dbPort,
 		dbUsername,
@@ -41,6 +44,15 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	userController := user.New(db)
-	router2.New(db, userController)
+
+	router2.New(ctx, db)
+}
+
+type controllers struct {
+	usersController users.Controllers
+}
+
+func initControllers(db *sql.DB) controllers {
+	repo := repository.New(db)
+	return controllers{usersController: users.New(repo)}
 }

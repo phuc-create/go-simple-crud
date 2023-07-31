@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// ResponseWithErrs control errors handling for response
+// ResponseWithErrs control pkgErrors handling for response
 func ResponseWithErrs(w http.ResponseWriter, status int, msg string) {
 	ResponseWithJSON(w, status, map[string]string{"error": msg})
 }
