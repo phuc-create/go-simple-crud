@@ -3,9 +3,10 @@ package users
 import (
 	"context"
 	"errors"
-	"github.com/phuc-create/go-simple-crud/helpers"
 	http "net/http"
 	"time"
+
+	"github.com/phuc-create/go-simple-crud/helpers"
 )
 
 type UserInput struct {
@@ -56,9 +57,9 @@ func validateInfoUser(user UserInput) error {
 func (h Handler) GetAllUser(ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		list, _ := h.controllers.GetAllUsersController(ctx)
-		if len(list) < 1 {
-			helpers.ResponseWithErrs(w, http.StatusInternalServerError, "Could not find any users!")
+		list, err := h.controllers.GetAllUsersController(ctx)
+		if err != nil {
+			helpers.ResponseWithErrs(w, http.StatusInternalServerError, err.Error())
 		}
 		helpers.ResponseWithJSON(w, http.StatusOK, list)
 	}
