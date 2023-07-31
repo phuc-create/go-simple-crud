@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"github.com/phuc-create/go-simple-crud/internal/repository"
-	"github.com/phuc-create/go-simple-crud/internal/repository/controllers/users"
 	router2 "github.com/phuc-create/go-simple-crud/router"
 	"log"
 	"os"
@@ -32,27 +30,23 @@ func main() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 
 	connStr := fmt.Sprintf(
-		"host=%s port=%s users=%s password=%s dbname=%s sslmode=disable",
-		dbHost,
-		dbPort,
+		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		dbUsername,
 		dbPassword,
+		dbHost,
+		dbPort,
 		dbName,
 	)
+	fmt.Println(connStr)
 	db, err := sql.Open("postgres", connStr)
+
+	if err := db.Ping(); err != nil {
+		db.Close()
+	}
 
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	fmt.Println("DB already connected")
 	router2.New(ctx, db)
-}
-
-type controllers struct {
-	usersController users.Controllers
-}
-
-func initControllers(db *sql.DB) controllers {
-	repo := repository.New(db)
-	return controllers{usersController: users.New(repo)}
 }

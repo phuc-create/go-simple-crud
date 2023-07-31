@@ -27,7 +27,6 @@ func validateInfoUser(user models.User) error {
 
 func (i implement) GetAllUsersController(ctx context.Context) ([]models.User, error) {
 	var users []models.User
-	//statement := "SELECT * FROM user_account"
 	users, err := i.repo.Users().GetAllUsers(ctx)
 	if err != nil {
 		return nil, err

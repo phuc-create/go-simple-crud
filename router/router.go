@@ -17,7 +17,7 @@ import (
 type MasterRouter struct {
 	context          context.Context
 	Router           *chi.Mux
-	DB               *sql.DB
+	db               *sql.DB
 	usersControllers users2.Controllers
 	usersHandler     users.Handler
 }
@@ -44,6 +44,7 @@ func MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 
 func New(ctx context.Context, db *sql.DB) {
 	repo := repository.New(db)
+
 	controllers := initControllers(repo)
 	userHandler := users.New(controllers.usersController)
 	router := chi.NewRouter()
@@ -52,7 +53,7 @@ func New(ctx context.Context, db *sql.DB) {
 	r := &MasterRouter{
 		context:          ctx,
 		Router:           router,
-		DB:               db,
+		db:               db,
 		usersHandler:     userHandler,
 		usersControllers: controllers.usersController,
 	}
