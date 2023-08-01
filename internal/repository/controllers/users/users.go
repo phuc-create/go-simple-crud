@@ -3,7 +3,6 @@ package users
 import (
 	"context"
 
-	"github.com/friendsofgo/errors"
 	"github.com/phuc-create/go-simple-crud/helpers"
 	"github.com/phuc-create/go-simple-crud/models"
 )
@@ -31,7 +30,7 @@ func (i implement) GetAllUsersController(ctx context.Context) ([]models.User, er
 	var users []models.User
 	users, err := i.repo.Users().GetAllUsers(ctx)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 
 	return users, nil

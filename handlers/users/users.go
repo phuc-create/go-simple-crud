@@ -2,11 +2,12 @@ package users
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	http "net/http"
 	"time"
 
-	"github.com/phuc-create/go-simple-crud/helpers"
+	"github.com/phuc-create/go-simple-crud/models"
 )
 
 type UserInput struct {
@@ -21,6 +22,12 @@ type UserResponse struct {
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type Response struct {
+	Status int64         `json:"status"`
+	Data   []models.User `json:"data"`
+	Errors string        `json:"errors"`
 }
 
 func validateInfoUser(user UserInput) error {
@@ -59,9 +66,12 @@ func (h Handler) GetAllUser(ctx context.Context) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		list, err := h.controllers.GetAllUsersController(ctx)
 		if err != nil {
-			helpers.ResponseWithErrs(w, http.StatusInternalServerError, err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(Response{Data: nil, Status: http.StatusInternalServerError, Errors: err.Error()})
+			return
 		}
-		helpers.ResponseWithJSON(w, http.StatusOK, list)
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(Response{Data: list, Status: http.StatusOK})
 	}
 }
 
