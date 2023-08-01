@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/phuc-create/go-simple-crud/handlers/users"
+	"github.com/phuc-create/go-simple-crud/internal/handlers/users"
 	"github.com/phuc-create/go-simple-crud/internal/repository"
 	users2 "github.com/phuc-create/go-simple-crud/internal/repository/controllers/users"
 	"log"
