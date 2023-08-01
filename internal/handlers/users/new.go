@@ -1,7 +1,7 @@
 package users
 
 import (
-	"github.com/phuc-create/go-simple-crud/internal/repository/controllers/users"
+	"github.com/phuc-create/go-simple-crud/internal/controllers/users"
 )
 
 type Handler struct {
