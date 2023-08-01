@@ -2,8 +2,6 @@ package users
 
 import (
 	"context"
-
-	"github.com/phuc-create/go-simple-crud/helpers"
 	"github.com/phuc-create/go-simple-crud/models"
 )
 
@@ -14,27 +12,17 @@ func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 
 }
 
-func validateInfoUser(user models.User) error {
-	if user.ID == "" || user.Username == "" || user.Password == "" {
-		return ErrMissingInformation
-	}
-
-	isWhiteSpace := helpers.ContainWhiteSpace(user.Password)
-	if isWhiteSpace {
-		return ErrPasswordContainWhiteSpace
-	}
-	return nil
-}
-
-func (i implement) GetAllUsersController(ctx context.Context) ([]models.User, error) {
-	var users []models.User
-	users, err := i.repo.Users().GetAllUsers(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return users, nil
-}
+//func validateInfoUser(user models.User) error {
+//	if user.ID == "" || user.Username == "" || user.Password == "" {
+//		return utils.ErrMissingInformation
+//	}
+//
+//	isWhiteSpace := helpers.ContainWhiteSpace(user.Password)
+//	if isWhiteSpace {
+//		return utils.ErrPasswordContainWhiteSpace
+//	}
+//	return nil
+//}
 
 //func (i implement) CheckUserExist(username string) bool {
 //	statement := "SELECT username FROM user_account WHERE username=$1"

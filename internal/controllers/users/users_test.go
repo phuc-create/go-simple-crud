@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	users2 "github.com/phuc-create/go-simple-crud/internal/handlers/users"
 	"github.com/phuc-create/go-simple-crud/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -17,7 +18,7 @@ func TestImplement_CreateUser(t *testing.T) {
 
 	type expected struct {
 		user  models.User
-		error error
+		error string
 	}
 
 	type arg struct {
@@ -43,7 +44,7 @@ func TestImplement_CreateUser(t *testing.T) {
 					CreatedAt: datetime,
 					UpdatedAt: datetime,
 				},
-				error: nil,
+				error: "",
 			},
 		},
 		"fail: error missing information": {
@@ -56,7 +57,7 @@ func TestImplement_CreateUser(t *testing.T) {
 			},
 			expectedResult: expected{
 				user:  models.User{},
-				error: ErrMissingInformation,
+				error: users2.ErrMissingInformation,
 			},
 		},
 		"fail: error users already exist": {
@@ -69,7 +70,7 @@ func TestImplement_CreateUser(t *testing.T) {
 			},
 			expectedResult: expected{
 				user:  models.User{},
-				error: ErrUserAlreadyExist,
+				error: users2.ErrUserAlreadyExist,
 			},
 		},
 		"fail: error password contain white space": {
@@ -82,7 +83,7 @@ func TestImplement_CreateUser(t *testing.T) {
 			},
 			expectedResult: expected{
 				user:  models.User{},
-				error: ErrPasswordContainWhiteSpace,
+				error: users2.ErrPasswordContainWhiteSpace,
 			},
 		},
 	}
@@ -90,7 +91,7 @@ func TestImplement_CreateUser(t *testing.T) {
 	for _, tc := range tsc {
 		usr, err := i.CreateUserController(ctx, tc.input)
 		if err != nil {
-			require.EqualError(t, err, tc.expectedResult.error.Error())
+			require.EqualError(t, err, tc.expectedResult.error)
 		}
 		assert.Equal(t, tc.expectedResult.user, usr)
 	}
