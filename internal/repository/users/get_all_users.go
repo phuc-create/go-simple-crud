@@ -2,10 +2,8 @@ package users
 
 import (
 	"context"
-
 	"github.com/phuc-create/go-simple-crud/internal/repository/orm"
 	"github.com/phuc-create/go-simple-crud/models"
-	"github.com/phuc-create/go-simple-crud/pkgErrors"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
@@ -16,14 +14,10 @@ func (i implement) GetAllUsers(ctx context.Context) ([]models.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	var result []models.User
-
+	var result = []models.User{}
 	for _, c := range users {
 		result = append(result, toUser(c))
 	}
 
-	if len(result) < 1 {
-		return nil, pkgErrors.ErrCouldNotFindAnyUser
-	}
 	return result, nil
 }

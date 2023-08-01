@@ -1,13 +1,27 @@
 package helpers
 
 import (
-	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
-// ResponseWithJSON control response with json format
-func ResponseWithJSON(w http.ResponseWriter, status int, data interface{}) {
-	result, _ := json.Marshal(data)
-	w.WriteHeader(status)
-	w.Write(result)
+const (
+	InternalError         = "Internal Error"
+	ErrSomethingWentWrong = "Something went wrong"
+)
+
+type ErrResponse struct {
+	Status  int    `json:"status,omitempty"`
+	Code    string `json:"message,omitempty"`
+	Message string `json:"description,omitempty"`
+}
+
+var DefaultError = &ErrResponse{
+	Status:  http.StatusBadRequest,
+	Code:    InternalError,
+	Message: ErrSomethingWentWrong,
+}
+
+func (e ErrResponse) Error() string {
+	return fmt.Sprintf("Status: [%d], Code: [%s], Desc: [%s]", e.Status, e.Message, e.Message)
 }
