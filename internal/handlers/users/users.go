@@ -1,7 +1,6 @@
 package users
 
 import (
-	"errors"
 	"time"
 )
 
@@ -17,21 +16,6 @@ type UserResponse struct {
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-}
-
-func validateInfoUser(user UserInput) error {
-	if user.ID == "" {
-		return errors.New("could not find any users")
-	}
-
-	if user.Username == "" {
-		return errors.New("username could not be empty")
-	}
-
-	if user.Password == "" {
-		return errors.New("password could not be empty")
-	}
-	return nil
 }
 
 // GetUserByID return users following id

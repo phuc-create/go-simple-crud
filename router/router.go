@@ -73,7 +73,7 @@ func (mr MasterRouter) initUserRoutes() {
 		r.NotFound(NotFound)
 		r.MethodNotAllowed(MethodNotAllowed)
 		r.Get(pattern, mr.usersHandler.GetAllUser(mr.context))
-		//r.Post(pattern, mr.Handler.CreateUser)
+		r.Post(pattern, mr.usersHandler.CreateUser(mr.context))
 		//r.Get(pattern+"/{userID}", mr.Handler.GetUserByID)
 		//r.Delete(pattern+"/{userID}", mr.Handler.DeleteUser)
 		//r.Put(pattern+"/{userID}", mr.Handler.UpdateUserByID)

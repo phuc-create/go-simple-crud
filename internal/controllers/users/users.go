@@ -1,7 +1,6 @@
 package users
 
 import (
-	"context"
 	"github.com/phuc-create/go-simple-crud/models"
 )
 
@@ -12,18 +11,6 @@ func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 
 }
 
-//func validateInfoUser(user models.User) error {
-//	if user.ID == "" || user.Username == "" || user.Password == "" {
-//		return utils.ErrMissingInformation
-//	}
-//
-//	isWhiteSpace := helpers.ContainWhiteSpace(user.Password)
-//	if isWhiteSpace {
-//		return utils.ErrPasswordContainWhiteSpace
-//	}
-//	return nil
-//}
-
 //func (i implement) CheckUserExist(username string) bool {
 //	statement := "SELECT username FROM user_account WHERE username=$1"
 //	err := i.db.QueryRow(statement, username).Scan(&username)
@@ -32,29 +19,6 @@ func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 //	}
 //	return true
 //}
-
-func (i implement) CreateUserController(ctx context.Context, user models.User) (models.User, error) {
-	panic("implement me")
-	//if err := validateInfoUser(users); err != nil {
-	//	return models.User{}, err
-	//}
-	//users, err := i.repo.Users().GetAllUsers(ctx)
-	//if err != nil{
-	//	return models.User{}, ErrUserAlreadyExist
-	//}
-	//statement := "INSERT INTO user_account (id,username,password,created_at,updated_at) VALUES ($1,$2,$3,$4,$5)"
-	//if _, err := i.db.Exec(
-	//	statement,
-	//	users.ID,
-	//	users.Username,
-	//	users.Password,
-	//	users.CreatedAt,
-	//	users.UpdatedAt,
-	//); err != nil {
-	//	return models.User{}, err
-	//}
-	//return users, nil
-}
 
 //func (i implement) GetUserByID(userID string) (models.User, error) {
 //	var users models.User

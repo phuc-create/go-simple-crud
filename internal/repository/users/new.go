@@ -8,6 +8,7 @@ import (
 
 type Repository interface {
 	GetAllUsers(ctx context.Context) ([]models.User, error)
+	CreateUser(ctx context.Context, user models.User) (models.User, error)
 }
 
 func New(db *sql.DB) Repository {
