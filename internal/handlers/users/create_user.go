@@ -21,6 +21,13 @@ func validateInfoUser(user models.User) error {
 	if user.Username == "" || user.Password == "" {
 		return MissingInformation
 	}
+	if len(user.Username) < 5 {
+		return AtLeastFiveChars
+	}
+	if len(user.Username) > 10 {
+		return MaximumTenChars
+	}
+
 	isWhiteSpace := helpers.ContainWhiteSpace(user.Password)
 	if isWhiteSpace {
 		return PasswordContainWhiteSpace

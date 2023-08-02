@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	"fmt"
 	"github.com/phuc-create/go-simple-crud/internal/repository/orm"
 	"github.com/phuc-create/go-simple-crud/models"
 	"github.com/volatiletech/null/v8"
@@ -10,19 +11,20 @@ import (
 )
 
 func (i implement) CreateUser(ctx context.Context, user models.User) (models.User, error) {
-	if users, _ := orm.UserAccounts(qm.Where("id=?", user.ID)).All(ctx, i.db); len(users) > 0 {
-		return models.User{}, ErrUserAlreadyExist
+	if users, _ := orm.UserAccounts(qm.Where("username=?", user.Username)).All(ctx, i.db); len(users) > 0 {
+		return models.User{}, UserAlreadyExist
 	}
 	var u = orm.UserAccount{
 		ID:       user.ID,
-		Username: null.String{String: user.Username},
-		Password: null.String{String: user.Password},
+		Username: null.StringFrom(user.Username),
+		Password: null.StringFrom(user.Username),
 	}
 
 	err := u.Insert(ctx, i.db, boil.Infer())
 	if err != nil {
 		return models.User{}, err
 	}
+	fmt.Println(u)
 	return toUser(&u), nil
 
 }

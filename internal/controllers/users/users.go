@@ -11,15 +11,6 @@ func removeSpecificElInArr(arr []*models.User, index int) []*models.User {
 
 }
 
-//func (i implement) CheckUserExist(username string) bool {
-//	statement := "SELECT username FROM user_account WHERE username=$1"
-//	err := i.db.QueryRow(statement, username).Scan(&username)
-//	if err != nil {
-//		return false
-//	}
-//	return true
-//}
-
 //func (i implement) GetUserByID(userID string) (models.User, error) {
 //	var users models.User
 //	statement := "SELECT * FROM user_account WHERE id=$1"
