@@ -37,7 +37,6 @@ func main() {
 		dbPort,
 		dbName,
 	)
-	fmt.Println(connStr)
 	db, err := sql.Open("postgres", connStr)
 
 	if err := db.Ping(); err != nil {
