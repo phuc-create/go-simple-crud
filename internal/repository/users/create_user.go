@@ -2,7 +2,6 @@ package users
 
 import (
 	"context"
-	"fmt"
 	"github.com/phuc-create/go-simple-crud/internal/repository/orm"
 	"github.com/phuc-create/go-simple-crud/models"
 	"github.com/volatiletech/null/v8"
@@ -24,7 +23,5 @@ func (i implement) CreateUser(ctx context.Context, user models.User) (models.Use
 	if err != nil {
 		return models.User{}, err
 	}
-	fmt.Println(u)
 	return toUser(&u), nil
-
 }
