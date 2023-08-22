@@ -4,11 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	router2 "github.com/phuc-create/go-simple-crud/router"
-	"log"
-	"os"
 )
 
 const (
@@ -47,5 +48,10 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("DB already connected")
+	fmt.Println("this is commit 1")
+	fmt.Println("this is commit 2")
+	fmt.Println("this is commit 3")
+	fmt.Println("this is commit 456")
+	fmt.Println("this is commit 789")
 	router2.New(ctx, db)
 }
