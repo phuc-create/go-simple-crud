@@ -1,32 +1,40 @@
-package router
+package server
 
 import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	users2 "github.com/phuc-create/go-simple-crud/internal/controllers/users"
-	"github.com/phuc-create/go-simple-crud/internal/handlers/users"
-	"github.com/phuc-create/go-simple-crud/internal/repository"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	prodCtrls "github.com/phuc-create/go-simple-crud/internal/controllers/products"
+	userCtrls "github.com/phuc-create/go-simple-crud/internal/controllers/users"
+	"github.com/phuc-create/go-simple-crud/internal/handlers/products"
+	"github.com/phuc-create/go-simple-crud/internal/handlers/users"
+	"github.com/phuc-create/go-simple-crud/internal/repository"
 )
 
 // MasterRouter masterRoute
 type MasterRouter struct {
-	context          context.Context
-	Router           *chi.Mux
-	db               *sql.DB
-	usersControllers users2.Controllers
-	usersHandler     users.Handler
+	context        context.Context
+	Router         *chi.Mux
+	db             *sql.DB
+	userHandler    users.UserHandlers
+	productHandler products.ProductHandlers
 }
+
 type controllers struct {
-	usersController users2.Controllers
+	usersController    userCtrls.UserControllers
+	productsController prodCtrls.ProductControllers
 }
 
 func initControllers(repo repository.Registry) controllers {
-	return controllers{usersController: users2.New(repo)}
+	return controllers{
+		usersController:    userCtrls.New(repo),
+		productsController: prodCtrls.New(repo),
+	}
 }
 func (mr MasterRouter) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	mr.Router.ServeHTTP(writer, request)
@@ -46,24 +54,25 @@ func New(ctx context.Context, db *sql.DB) {
 	repo := repository.New(db)
 
 	controllers := initControllers(repo)
-	userHandler := users.New(controllers.usersController)
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
 	r := &MasterRouter{
-		context:          ctx,
-		Router:           router,
-		db:               db,
-		usersHandler:     userHandler,
-		usersControllers: controllers.usersController,
+		context:        ctx,
+		Router:         router,
+		db:             db,
+		userHandler:    users.New(controllers.usersController),
+		productHandler: products.New(controllers.productsController),
 	}
+
 	r.initRoutes()
-	fmt.Println("server listening & serve at localhost:3000")
-	log.Fatal(http.ListenAndServe(":3000", router))
+	fmt.Println("server listening & serve at localhost:5000")
+	log.Fatal(http.ListenAndServe(":5000", router))
 }
 
 func (mr MasterRouter) initRoutes() {
 	mr.initUserRoutes()
+	mr.initProductRoutes()
 }
 
 func (mr MasterRouter) initUserRoutes() {
@@ -72,10 +81,19 @@ func (mr MasterRouter) initUserRoutes() {
 	mr.Router.Group(func(r chi.Router) {
 		r.NotFound(NotFound)
 		r.MethodNotAllowed(MethodNotAllowed)
-		r.Get(pattern, mr.usersHandler.GetAllUser(mr.context))
-		r.Post(pattern, mr.usersHandler.CreateUser(mr.context))
+		r.Get(pattern, mr.userHandler.GetAllUser(mr.context))
+		r.Post(pattern, mr.userHandler.CreateUser(mr.context))
 		//r.Get(pattern+"/{userID}", mr.Handler.GetUserByID)
 		//r.Delete(pattern+"/{userID}", mr.Handler.DeleteUser)
 		//r.Put(pattern+"/{userID}", mr.Handler.UpdateUserByID)
+	})
+}
+func (mr MasterRouter) initProductRoutes() {
+	pattern := "/api/products"
+
+	mr.Router.Group(func(r chi.Router) {
+		r.NotFound(NotFound)
+		r.MethodNotAllowed(MethodNotAllowed)
+		r.Get(pattern, mr.productHandler.GetAllProducts(mr.context))
 	})
 }

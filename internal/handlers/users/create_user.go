@@ -3,10 +3,11 @@ package users
 import (
 	"context"
 	"encoding/json"
-	"github.com/phuc-create/go-simple-crud/helpers"
-	"github.com/phuc-create/go-simple-crud/models"
 	"net/http"
 	"time"
+
+	"github.com/phuc-create/go-simple-crud/helpers"
+	"github.com/phuc-create/go-simple-crud/models"
 )
 
 type User struct {
@@ -35,21 +36,21 @@ func validateInfoUser(user models.User) error {
 	return nil
 }
 
-func (h Handler) CreateUser(ctx context.Context) http.HandlerFunc {
+func (h UserHandlers) CreateUser(ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var user models.User
 		errEncode := json.NewDecoder(r.Body).Decode(&user)
 		if errEncode != nil {
-			responseJSON(w, http.StatusBadRequest, errorHandler(errEncode))
+			responseJSONError(w, http.StatusBadRequest, errorHandler(errEncode))
 			return
 		}
 
 		if err := validateInfoUser(user); err != nil {
-			responseJSON(w, http.StatusBadRequest, errorHandler(err))
+			responseJSONError(w, http.StatusBadRequest, errorHandler(err))
 			return
 		}
 
-		newUser, err := h.controllers.CreateUserController(ctx, models.User{
+		newUser, err := h.controllers.CreateUser(ctx, models.User{
 			ID:        helpers.GenerateID(),
 			Username:  user.Username,
 			Password:  user.Password,
@@ -57,11 +58,11 @@ func (h Handler) CreateUser(ctx context.Context) http.HandlerFunc {
 			UpdatedAt: time.Now(),
 		})
 		if err != nil {
-			responseJSON(w, http.StatusBadRequest, errorHandler(err))
+			responseJSONError(w, http.StatusBadRequest, errorHandler(err))
 			return
 		}
 
-		responseJSON(w, http.StatusOK, DataResponse{Status: http.StatusOK, Data: User{User: newUser}})
+		responseJSONData(w, DataResponse{Status: http.StatusOK, Data: User{User: newUser}})
 	}
 }
 

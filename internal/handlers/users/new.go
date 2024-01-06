@@ -4,12 +4,12 @@ import (
 	"github.com/phuc-create/go-simple-crud/internal/controllers/users"
 )
 
-type Handler struct {
-	controllers users.Controllers
+type UserHandlers struct {
+	controllers users.UserControllers
 }
 
-func New(controllers users.Controllers) Handler {
-	return Handler{
+func New(controllers users.UserControllers) UserHandlers {
+	return UserHandlers{
 		controllers: controllers,
 	}
 }

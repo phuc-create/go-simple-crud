@@ -5,7 +5,7 @@ Dependencies injected in Project
 - Controller => Handler
 
 ### Reference about table creation
-
+```sql```
 CREATE TABLE IF NOT EXISTS vendors
 (
     id                          BIGINT PRIMARY KEY,
@@ -33,3 +33,4 @@ CREATE TABLE IF NOT EXISTS vendors
 );
 CREATE INDEX IF NOT EXISTS vendors_vendor_no_index ON vendors(vendor_no);
 CREATE INDEX IF NOT EXISTS vendors_storage_location_index ON vendors(storage_location);
+``````
