@@ -29,5 +29,9 @@ func (i implement) Products() products.Repository {
 }
 
 func New(db *sql.DB) Registry {
-	return implement{db: db, users: users.New(db), products: products.New(db)}
+	return implement{
+		db:       db,
+		users:    users.New(db),
+		products: products.New(db),
+	}
 }

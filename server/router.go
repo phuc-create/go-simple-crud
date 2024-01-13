@@ -30,7 +30,8 @@ type controllers struct {
 	productsController prodCtrls.ProductControllers
 }
 
-func initControllers(repo repository.Registry) controllers {
+func initControllers(db *sql.DB) controllers {
+	repo := repository.New(db)
 	return controllers{
 		usersController:    userCtrls.New(repo),
 		productsController: prodCtrls.New(repo),
@@ -51,9 +52,8 @@ func MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 }
 
 func New(ctx context.Context, db *sql.DB) {
-	repo := repository.New(db)
 
-	controllers := initControllers(repo)
+	ctrls := initControllers(db)
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
@@ -61,8 +61,8 @@ func New(ctx context.Context, db *sql.DB) {
 		context:        ctx,
 		Router:         router,
 		db:             db,
-		userHandler:    users.New(controllers.usersController),
-		productHandler: products.New(controllers.productsController),
+		userHandler:    users.New(ctrls.usersController),
+		productHandler: products.New(ctrls.productsController),
 	}
 
 	r.initRoutes()
